@@ -72,7 +72,7 @@ const AssignmentsStudentView = () => {
                 </button>
             </div>
 
-            <table border="1" cellPadding="5" cellSpacing="0">
+            <table className="Center" border="1" cellPadding="5" cellSpacing="0">
                 <thead>
                     <tr>
                         <th>Course ID</th>

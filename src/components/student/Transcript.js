@@ -39,7 +39,7 @@ const Transcript = () => {
     return (
         <div>
             <h3>Transcript</h3>
-            <table>
+            <table className="Center">
                 <thead>
                     <tr>
                         <th>Year</th>

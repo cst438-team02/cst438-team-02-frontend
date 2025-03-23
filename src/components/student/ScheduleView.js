@@ -89,7 +89,7 @@ const ScheduleView = () => {
       {schedule.length === 0 ? (
         <p>No courses enrolled presently.</p>
       ) : (
-        <table border="1" cellPadding="5" cellSpacing="0">
+        <table className="Center" border="1" cellPadding="5" cellSpacing="0">
           <thead>
             <tr>
               <th>Course ID</th>
