@@ -2,11 +2,18 @@ import React, { useState, useEffect } from 'react';
 
 const ScheduleView = () => {
   const [schedule, setSchedule] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [year, setYear] = useState("2025");
+  const [semester, setSemester] = useState("Spring");
 
-  useEffect(() => {
-    fetch("/enrollments?year=2025&semester=Spring&studentId=3", { headers: { "Accept": "application/json" } })
+  const years = ["2023", "2024", "2025"];
+  const semesters = ["Spring", "Fall"];
+
+  const fetchSchedule = () => {
+    setLoading(true);
+    setError("");
+    fetch(`/enrollments?year=${year}&semester=${semester}&studentId=3`, { headers: { "Accept": "application/json" } })
       .then(response => {
         if (!response.ok) {
           throw new Error("Failed to fetch schedule");
@@ -21,6 +28,11 @@ const ScheduleView = () => {
         setError(err.message);
         setLoading(false);
       });
+  };
+
+  useEffect(() => {
+    // Automatically fetch schedule on initial render
+    fetchSchedule();
   }, []);
 
   const handleDrop = (enrollmentId) => {
@@ -29,7 +41,7 @@ const ScheduleView = () => {
          if (!response.ok) {
             throw new Error("Unable to drop course");
          }
-         // Update schedule without a prompt confirmation.
+         // Update local schedule
          setSchedule(schedule.filter(item => item.enrollmentId !== enrollmentId));
       })
       .catch(err => {
@@ -43,6 +55,37 @@ const ScheduleView = () => {
   return (
     <div>
       <h1>Class Schedule</h1>
+
+      <div style={{ marginBottom: "1rem" }}>
+        <label htmlFor="yearSelect">Select Year: </label>
+        <select
+          id="yearSelect"
+          value={year}
+          onChange={(e) => setYear(e.target.value)}
+        >
+          {years.map((y) => (
+            <option key={y} value={y}>{y}</option>
+          ))}
+        </select>
+
+        <label htmlFor="semesterSelect" style={{ marginLeft: "1rem" }}>
+          Select Semester:
+        </label>
+        <select
+          id="semesterSelect"
+          value={semester}
+          onChange={(e) => setSemester(e.target.value)}
+        >
+          {semesters.map((s) => (
+            <option key={s} value={s}>{s}</option>
+          ))}
+        </select>
+
+        <button style={{ marginLeft: "1rem" }} onClick={fetchSchedule}>
+          Load Schedule
+        </button>
+      </div>
+
       {schedule.length === 0 ? (
         <p>No courses enrolled presently.</p>
       ) : (
