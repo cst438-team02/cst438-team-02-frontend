@@ -162,7 +162,7 @@ const AssignmentsView = (props) => {
                     ))}
                 </tbody>
             </table>
-            <AssignmentAdd save={addAssignment} />
+            <AssignmentAdd save={addAssignment} secNo={secNo}/>
         </>
     );
 }
