@@ -1,5 +1,3 @@
-import React, {useState, useEffect} from 'react';
-
 // instructor views a list of sections they are teaching 
 // use the URL /sections?email=dwisneski@csumb.edu&year= &semester=
 // the email= will be removed in assignment 7 login security
@@ -10,16 +8,84 @@ import React, {useState, useEffect} from 'react';
 // <Link to="/enrollments" state={section}>View Enrollments</Link>
 // <Link to="/assignments" state={section}>View Assignments</Link>
 
-const InstructorSectionsView = (props) => {
+import React, { useState, useEffect } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 
-    
-     
-    return(
-        <> 
-           <h3>Not implemented</h3>
+const InstructorSectionsView = () => {
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState("");
+    const [year, setYear] = useState("2025");
+    const [semester, setSemester] = useState("Spring");
+
+    const location = useLocation();
+    const [sections, setSections] = useState([]);
+    const [message, setMessage] = useState('');
+
+    const fetchSections = () => {
+        setLoading(true);
+        setError("");
+        fetch(`/sections?email=dwisneski@csumb.edu&year=${year}&semester=${semester}`, { headers: { "Accept": "application/json" } })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Failed to fetch assignments");
+                }
+                return response.json();
+            })
+            .then(data => {
+                setSections(data);
+                setLoading(false);
+            })
+            .catch(err => {
+                setError(err.message);
+                setLoading(false);
+            });
+    };
+
+    useEffect(() => {
+        // Automatically fetch on initial load
+        fetchSections();
+    }, []);
+
+    return (
+        <>
+            <h3>Instructor Sections for {semester} {year}</h3>
+            <h4>{message}</h4>
+            <table className="Center" border="1" cellPadding="5" cellSpacing="0">
+                <thead>
+                    <tr>
+                        <th>Section No</th>
+                        <th>Course ID</th>
+                        <th>Section ID</th>
+                        <th>Building</th>
+                        <th>Room</th>
+                        <th>Times</th>
+                        <th>Assignments</th>
+                        <th>Enrollments</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {sections.map((section, index) => (
+                        <tr key={index}>
+                            <td>{section.secNo}</td>
+                            <td>{section.courseId}</td>
+                            <td>{section.secId}</td>
+                            <td>{section.building}</td>
+                            <td>{section.room}</td>
+                            <td>{section.times}</td>
+                            <td>
+                                <Link to="/assignments" state={section}>View Assignments</Link>
+                            </td>
+                            <td>
+                                <Link to="/enrollments" state={section}>View Enrollments</Link>
+                            </td>
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
         </>
     );
-}
+};
 
 export default InstructorSectionsView;
+
 
