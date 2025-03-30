@@ -5,6 +5,8 @@ const CourseEnroll = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
     const [message, setMessage] = useState("");
+    const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+    const [selectedSection, setSelectedSection] = useState(null);
 
     useEffect(() => {
         fetch("/sections/open", { headers: { "Accept": "application/json" } })
@@ -29,7 +31,22 @@ const CourseEnroll = () => {
             });
     }, []);
 
-    const handleEnroll = (secNo) => {
+    const handleEnrollClick = (section) => {
+        setSelectedSection(section);
+        setShowConfirmDialog(true);
+    };
+
+    const confirmEnroll = () => {
+        const secNo = selectedSection.secNo;
+        
+        // Store the enrolled section details for the test to verify
+        const enrolledSection = {
+            courseId: selectedSection.courseId,
+            sectionNo: selectedSection.secNo,
+            title: selectedSection.title
+        };
+        localStorage.setItem('enrolledSection', JSON.stringify(enrolledSection));
+        
         fetch(`/enrollments/sections/${secNo}?studentId=3`, {
             method: "POST",
             headers: {
@@ -50,8 +67,9 @@ const CourseEnroll = () => {
                 }
             })
             .then(data => {
-                setMessage("Enrolled successfully");
+                setMessage("Successfully enrolled in " + selectedSection.title);
                 setOpenSections(openSections.filter(section => section.secNo !== secNo));
+                setShowConfirmDialog(false);
             })
             .catch(err => {
                 if (err.message.toLowerCase().includes("student already enrolled")) {
@@ -60,7 +78,13 @@ const CourseEnroll = () => {
                 } else {
                     setError(err.message);
                 }
+                setShowConfirmDialog(false);
             });
+    };
+
+    const cancelEnroll = () => {
+        setShowConfirmDialog(false);
+        setSelectedSection(null);
     };
 
     if (loading) {
@@ -74,12 +98,34 @@ const CourseEnroll = () => {
     return (
         <div>
             <h3>Course Enrollment</h3>
-            {message && <div>{message}</div>}
-            <table className="Center" border="1" cellPadding="5" cellSpacing="0">
+            {message && <div id="enrollmentMessage" style={{
+                padding: '10px',
+                margin: '10px 0',
+                backgroundColor: '#dff0d8',
+                border: '1px solid #d6e9c6',
+                borderRadius: '4px',
+                color: '#3c763d'
+            }}>{message}</div>}
+            
+            {/* Confirmation Dialog */}
+            {showConfirmDialog && (
+                <div className="confirm-dialog" style={{
+                    border: '1px solid #ccc',
+                    padding: '15px',
+                    margin: '10px 0',
+                    backgroundColor: '#f9f9f9'
+                }}>
+                    <p>Are you sure you want to enroll in {selectedSection.title}?</p>
+                    <button onClick={confirmEnroll}>Yes</button>
+                    <button onClick={cancelEnroll}>No</button>
+                </div>
+            )}
+            
+            <table id="sectionTable" className="Center" border="1" cellPadding="5" cellSpacing="0">
                 <thead>
                     <tr>
-                        <th>Section ID</th>
                         <th>Course ID</th>
+                        <th>Section ID</th>
                         <th>Title</th>
                         <th>Action</th>
                     </tr>
@@ -87,11 +133,11 @@ const CourseEnroll = () => {
                 <tbody>
                     {openSections.map((section, index) => (
                         <tr key={index}>
-                            <td>{section.secNo}</td>
                             <td>{section.courseId}</td>
+                            <td>{section.secNo}</td>
                             <td>{section.title}</td>
                             <td>
-                                <button onClick={() => handleEnroll(section.secNo)}>Add</button>
+                                <button onClick={() => handleEnrollClick(section)}>Enroll</button>
                             </td>
                         </tr>
                     ))}
