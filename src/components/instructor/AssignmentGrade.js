@@ -5,7 +5,7 @@
 // score column is an input field 
 //  <input type="text" name="score" value={g.score} onChange={onChange} />
  
-
+import {GRADEBOOK_URL} from '../../Constants';
 import React, { useState, useEffect } from 'react';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -19,7 +19,7 @@ const AssignmentGrade = ({ assignment }) => {
     const [message, setMessage] = useState("");
 
     const fetchGrades = () => {
-        fetch(`/assignments/${assignment.id}/grades`)
+        fetch(`http://localhost:8081/assignments/${assignment.id}/grades`)
             .then(res => {
                 if (!res.ok) throw new Error("Failed to fetch grades");
                 return res.json();
@@ -58,7 +58,7 @@ const AssignmentGrade = ({ assignment }) => {
             score: parseInt(g.score)
         }));
 
-        fetch('/grades', {
+        fetch(`${GRADEBOOK_URL}/grades`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'

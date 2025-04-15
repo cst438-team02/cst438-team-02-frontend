@@ -8,6 +8,7 @@
 // <Link to="/enrollments" state={section}>View Enrollments</Link>
 // <Link to="/assignments" state={section}>View Assignments</Link>
 
+import {GRADEBOOK_URL} from '../../Constants';
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 
@@ -24,7 +25,7 @@ const InstructorSectionsView = () => {
     const fetchSections = () => {
         setLoading(true);
         setError("");
-        fetch(`/sections?email=dwisneski@csumb.edu&year=${year}&semester=${semester}`, { headers: { "Accept": "application/json" } })
+        fetch(`${GRADEBOOK_URL}/sections?email=dwisneski@csumb.edu&year=${year}&semester=${semester}`, { headers: { "Accept": "application/json" } })
             .then(response => {
                 if (!response.ok) {
                     throw new Error("Failed to fetch assignments");

@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react';
 import { confirmAlert } from 'react-confirm-alert';
 import {useLocation} from 'react-router-dom'
 import {SERVER_URL} from '../../Constants';
+import {GRADEBOOK_URL} from '../../Constants';
 import Button from '@mui/material/Button';
 import AssignmentUpdate from './AssignmentUpdate';
 import AssignmentGrade from './AssignmentGrade';
@@ -31,7 +32,7 @@ const AssignmentsView = (props) => {
     // save assignment
     const saveAssignment = async (assignment) => {
         try {
-        const response = await fetch(`${SERVER_URL}/assignments`,
+        const response = await fetch(`${GRADEBOOK_URL}/assignments`,
             {
             method: 'PUT',
             headers: {
@@ -54,7 +55,7 @@ const AssignmentsView = (props) => {
     // adds Assignment
     const addAssignment = async (assignment) => {
         try {
-        const response = await  fetch(`${SERVER_URL}/assignments`,
+        const response = await  fetch(`${GRADEBOOK_URL}/assignments`,
             {
             method: 'POST',
             headers: {
@@ -78,7 +79,7 @@ const AssignmentsView = (props) => {
     // function to fetch assignments
     const  fetchAssignments = async () => {
         try {
-            const response = await fetch(`${SERVER_URL}/sections/${secNo}/assignments`);
+            const response = await fetch(`${GRADEBOOK_URL}/sections/${secNo}/assignments`);
             if (response.ok) {
                 const assignments = await response.json();
                 setAssignments(assignments);
@@ -117,7 +118,7 @@ const AssignmentsView = (props) => {
     // runs from onDelete function, deletes assignment
     const deleteAssignment = async (id) => {
         try {
-        const response = await fetch(`${SERVER_URL}/assignments/${id}`,
+        const response = await fetch(`${GRADEBOOK_URL}/assignments/${id}`,
         {
             method: 'DELETE',
             headers: {
