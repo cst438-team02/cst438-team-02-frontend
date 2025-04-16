@@ -24,7 +24,15 @@ const InstructorSectionsView = () => {
     const fetchSections = () => {
         setLoading(true);
         setError("");
-        fetch(`/sections?email=dwisneski@csumb.edu&year=${year}&semester=${semester}`, { headers: { "Accept": "application/json" } })
+        const jwt = sessionStorage.getItem('jwt');
+        // fetch(`/sections?email=dwisneski@csumb.edu&year=${year}&semester=${semester}`,
+        fetch(`/sections?year=${year}&semester=${semester}`,
+            { 
+                headers: {
+                    "Accept": "application/json",
+                    "Authorization": jwt,
+                    }
+            })
             .then(response => {
                 if (!response.ok) {
                     throw new Error("Failed to fetch assignments");

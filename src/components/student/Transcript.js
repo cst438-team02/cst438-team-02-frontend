@@ -6,7 +6,9 @@ const Transcript = () => {
     const [error, setError] = useState("");
 
     useEffect(() => {
-        fetch("/transcripts?studentId=3", { headers: { "Accept": "application/json" } })
+        // fetch("/transcripts?studentId=3", { headers: { "Accept": "application/json" } })
+        const jwt = sessionStorage.getItem('jwt');
+        fetch("/transcripts", { headers: { "Accept": "application/json", "Authorization": jwt } })
             .then(response => {
                 if (!response.ok) {
                     return response.text().then(text => { throw new Error("Failed to fetch transcript: " + text); });

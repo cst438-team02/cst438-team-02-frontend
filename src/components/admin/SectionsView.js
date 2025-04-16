@@ -20,7 +20,13 @@ function SectionsView(props) {
             setMessage("Enter search parameters");
         } else {
           try {
-            const response = await fetch(`${SERVER_URL}/courses/${search.courseId}/sections?year=${search.year}&semester=${search.semester}`);
+            const jwt = sessionStorage.getItem('jwt');
+            const response = await fetch(`${SERVER_URL}/courses/${search.courseId}/sections?year=${search.year}&semester=${search.semester}`, {
+              method: 'GET',
+              headers: {
+                "Authorization": jwt,
+              }
+            });
             if (response.ok) {
               const data = await response.json();
               setSections(data);

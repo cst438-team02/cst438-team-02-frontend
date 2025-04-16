@@ -37,8 +37,8 @@ const ScheduleView = () => {
     };
     
     console.log('Using mock schedule item:', mockScheduleItem);
-    
-    fetch(`/enrollments?year=${year}&semester=${semester}&studentId=3`, { headers: { "Accept": "application/json" } })
+    const jwt = sessionStorage.getItem('jwt');
+    fetch(`/enrollments?year=${year}&semester=${semester}&studentId=3`, { headers: { "Accept": "application/json", "Authorization": jwt } })
       .then(response => {
         if (!response.ok) {
           throw new Error("Failed to fetch schedule");
@@ -61,7 +61,8 @@ const ScheduleView = () => {
   };
 
   const handleDrop = (enrollmentId) => {
-    fetch(`/enrollments/${enrollmentId}`, { method: 'DELETE' })
+    const jwt = sessionStorage.getItem('jwt');
+    fetch(`/enrollments/${enrollmentId}`, { method: 'DELETE', headers: {"Authoriation": jwt} })
       .then(response => {
          if (!response.ok) {
             throw new Error("Unable to drop course");

@@ -31,21 +31,23 @@ const AssignmentsView = (props) => {
     // save assignment
     const saveAssignment = async (assignment) => {
         try {
-        const response = await fetch(`${SERVER_URL}/assignments`,
-            {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-            }, 
-            body: JSON.stringify(assignment),
-            });
-        if (response.ok) {
-            setMessage("assignment saved")
-            fetchAssignments();
-        } else {
-            const rc = await response.json();
-            setMessage(rc.message);
-        }
+            const jwt = sessionStorage.getItem('jwt');
+            const response = await fetch(`${SERVER_URL}/assignments`,
+                {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': jwt
+                }, 
+                body: JSON.stringify(assignment),
+                });
+            if (response.ok) {
+                setMessage("assignment saved")
+                fetchAssignments();
+            } else {
+                const rc = await response.json();
+                setMessage(rc.message);
+            }
         } catch (err) {
             setMessage("network error: "+err);
         }   
