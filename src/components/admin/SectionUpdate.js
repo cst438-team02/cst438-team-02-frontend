@@ -41,11 +41,13 @@ const SectionUpdate = (props)  => {
 
     const saveSection = async (section) => {
         try {
+          const jwt = sessionStorage.getItem('jwt');
           const response = await fetch (`${SERVER_URL}/sections`, 
             {
               method: 'PUT',
               headers: {
                 'Content-Type': 'application/json',
+                'Authorization': jwt,
               }, 
               body: JSON.stringify(section),
             });

@@ -9,7 +9,8 @@ const CourseEnroll = () => {
     const [selectedSection, setSelectedSection] = useState(null);
 
     useEffect(() => {
-        fetch("/sections/open", { headers: { "Accept": "application/json" } })
+        const jwt = sessionStorage.getItem('jwt');
+        fetch("/sections/open", { headers: { "Accept": "application/json", "Authorization": jwt } })
             .then(response => {
                 if (!response.ok) {
                     return response.text().then(text => { throw new Error("Failed to fetch open sections: " + text); });
@@ -47,11 +48,14 @@ const CourseEnroll = () => {
         };
         localStorage.setItem('enrolledSection', JSON.stringify(enrolledSection));
         
-        fetch(`/enrollments/sections/${secNo}?studentId=3`, {
+        const jwt = sessionStorage.getItem('jwt');
+        // fetch(`/enrollments/sections/${secNo}?studentId=3`, {
+        fetch(`/enrollments/sections/${secNo}`, {
             method: "POST",
             headers: {
                 "Accept": "application/json",
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                "Authorization": jwt
             },
             body: JSON.stringify({ enrollmentAction: "enroll" })
         })

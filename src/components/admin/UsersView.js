@@ -56,11 +56,13 @@ function UsersView(props) {
 
     const addUser = async (user) => {
       try {
+        const jwt = sessionStorage.getItem('jwt');
         const response = await  fetch(`${SERVER_URL}/users`,
           {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
+              'Authorization': jwt,
             }, 
             body: JSON.stringify(user),
           });
@@ -79,11 +81,13 @@ function UsersView(props) {
 
     const deleteUser = async (id) => {
       try {
+        const jwt = sessionStorage.getItem('jwt');
         const response = await fetch(`${SERVER_URL}/users/${id}`,
           {
             method: 'DELETE',
             headers: {
               'Content-Type': 'application/json',
+              'Authorization': jwt,
             }, 
           });
         if (response.ok) {

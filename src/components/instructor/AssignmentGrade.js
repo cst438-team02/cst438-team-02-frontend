@@ -57,11 +57,12 @@ const AssignmentGrade = ({ assignment }) => {
             gradeId: g.gradeId,
             score: parseInt(g.score)
         }));
-
+        const jwt = sessionStorage.getItem('jwt');
         fetch('/grades', {
             method: 'PUT',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': jwt
             },
             body: JSON.stringify(payload)
         })

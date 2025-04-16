@@ -17,7 +17,13 @@ const EnrollmentsView = () => {
   const [message, setMessage] = useState('');
 
   useEffect(() => {
-    fetch(`/sections/${secNo}/enrollments`)
+    const jwt = sessionStorage.getItem('jwt');
+    fetch(`/sections/${secNo}/enrollments`,{
+      mehtod: 'GET',
+      headers: {
+        'Authorization': jwt
+      }
+    })
       .then((res) => res.json())
       .then((data) => setEnrollments(data))
       .catch((err) => setMessage("Failed to fetch enrollments: " + err));
@@ -31,9 +37,13 @@ const EnrollmentsView = () => {
 
   const onSave = () => {
     //fetch(`/enrollments/${secNo}`, {
+    const jwt = sessionStorage.getItem('jwt');
     fetch(`/enrollments`, {
       method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 
+        'Content-Type': 'application/json',
+        'Authorization': jwt
+       },
       body: JSON.stringify(enrollments),
     })
       .then((res) => {

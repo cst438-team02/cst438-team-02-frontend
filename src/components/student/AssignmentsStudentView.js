@@ -13,7 +13,14 @@ const AssignmentsStudentView = () => {
     const fetchAssignments = () => {
         setLoading(true);
         setError("");
-        fetch(`/assignments?studentId=3&year=${year}&semester=${semester}`, { headers: { "Accept": "application/json" } })
+        const jwt = sessionStorage.getItem('jwt');
+        // fetch(`/assignments?studentId=3&year=${year}&semester=${semester}`,
+        fetch(`/assignments?&year=${year}&semester=${semester}`,
+            { headers: {
+                "Accept": "application/json",
+                "Authorization": jwt
+                } 
+            })
             .then(response => {
                 if (!response.ok) {
                     throw new Error("Failed to fetch assignments");
